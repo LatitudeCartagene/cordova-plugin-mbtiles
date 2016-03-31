@@ -54,19 +54,12 @@
 - (void)open:(NSString*) name {
     
     [self close];
-    
-    NSFileManager *filemgr =  [NSFileManager defaultManager];
-    NSString* dir = [self getFullDirectory];
-    if (dir != nil) {
-        NSString *absolutePath = [dir stringByAppendingPathComponent:name];
-        // test if the file exist
-        if ([filemgr fileExistsAtPath: absolutePath ] == YES) {
-            const char *dbpath = [absolutePath UTF8String];
-            // open the database
-            if (sqlite3_open_v2(dbpath, &_database, SQLITE_OPEN_READONLY, NULL) != SQLITE_OK) {
-                _database = nil;
-            }
-        } else {
+
+    if (self.directory != nil) {
+        NSString *absolutePath = [self.directory stringByAppendingPathComponent:name];
+        const char *dbpath = [absolutePath UTF8String];
+        // open the database
+        if (sqlite3_open_v2(dbpath, &_database, SQLITE_OPEN_READONLY, NULL) != SQLITE_OK) {
             _database = nil;
         }
     }
